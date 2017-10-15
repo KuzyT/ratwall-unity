@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,6 +41,18 @@ public class GameController : MonoBehaviour {
     // Признак того, что единоразовые действия после конца игры были выполнены
     private bool gameoverStarted;
 
+    // Объект авторизации
+    public GameObject loginObj;
+    // Объект выхода
+    public GameObject logoutObj;
+    // Поле E-mail
+    public GameObject inputFieldEmail;
+    // Поле Пароль
+    public GameObject inputFieldPassword;
+    // Надпись с именем пользователя
+    public GameObject userNameText;
+
+
     void Start () {
         // Инициализация значений (для рестарта)
         gameover = false;
@@ -65,6 +78,8 @@ public class GameController : MonoBehaviour {
                 gameoverStarted = true;
                 // Отобразить интерфейс рестарта
                 restartText.SetActive(true);
+                // Отправляем рекорд
+                StartCoroutine(GetComponent<WWWScore>().addRecord(score));
             }
 
             // Рестарт по R
@@ -94,6 +109,9 @@ public class GameController : MonoBehaviour {
             nextScore = Time.time + scoreRate;
             score = score + scoreAdd;
         }
+
+        setUserName();
+        setLoginVisible();
     }
 
     // Падение сковородки
@@ -110,6 +128,47 @@ public class GameController : MonoBehaviour {
             Quaternion spawnRotation = Quaternion.identity;
             Instantiate(pan.panObj, spawnPosition, spawnRotation);
             yield return new WaitForSeconds(pan.pause);
+        }
+    }
+
+    // Авторизация
+    public void login()
+    {
+        var email = inputFieldEmail.GetComponent<InputField>().text;
+        var password = inputFieldPassword.GetComponent<InputField>().text;
+        StartCoroutine(GetComponent<WWWScore>().login(email, password));
+    }
+
+    // Выход
+    public void logout()
+    {
+        GetComponent<WWWScore>().logout();
+    }
+
+    // Поменять видимость формы авторизации
+    public void setLoginVisible()
+    {
+        if (PlayerPrefs.HasKey("Token"))
+        {
+            loginObj.SetActive(false);
+            logoutObj.SetActive(true);
+        }
+        else
+        {
+            loginObj.SetActive(true);
+            logoutObj.SetActive(false);
+        }
+    }
+
+    // Установить имя пользователя из настроек
+    public void setUserName()
+    {
+        if (PlayerPrefs.HasKey("UserName"))
+        {
+            userNameText.GetComponent<Text>().text = PlayerPrefs.GetString("UserName");
+        } else
+        {
+            userNameText.GetComponent<Text>().text = "Аноним";
         }
     }
 }
