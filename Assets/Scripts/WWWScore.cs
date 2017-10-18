@@ -23,7 +23,7 @@ public class WWWScore : MonoBehaviour {
 	public IEnumerator addRecord(int score)
     {
         WWWForm form = new WWWForm();
-        form.AddField("score", GameController.score);
+        form.AddField("score", score);
 
         WWW w;
 		if (PlayerPrefs.HasKey("Token"))
