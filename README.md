@@ -3,7 +3,7 @@
   <img src="https://habrastorage.org/webt/59/e3/0f/59e30fac0313f519581891.png" width="70%">
 </p>
 
-Пример проекта на Unity из статьи на Хабре. 
+Пример проекта на Unity Пример проекта на Unity из <a href="https://habrahabr.ru/post/340362/">статьи на Хабре</a>. 
 
 ## Базовый проект
 ```
